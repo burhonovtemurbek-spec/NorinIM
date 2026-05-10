@@ -1,191 +1,152 @@
-import json
-import os
+from flask import Flask, render_template_string, request, redirect, session, url_for
 import time
 
-DB_FILE = "maktab_bazasi.json"
+app = Flask(__name__)
+app.secret_key = "maktab_tizimi_2026_secret"
 
-# --- BAZA BILAN ISHLASH ---
-def load_db():
-    initial_data = {
-        "users": {},
-        "teachers": [],
-        "students": [],
-        "achievers": [],
-        "news": [],
-        "admin_office": [],
-        "library": [],
-        "settings": {"background": "default_bg.jpg"}
-    }
-    if os.path.exists(DB_FILE):
-        with open(DB_FILE, "r", encoding="utf-8") as f:
-            try:
-                data = json.load(f)
-                # Eskirgan bazada yangi bo'limlar yo'q bo'lsa, qo'shib qo'yamiz
-                for key in initial_data:
-                    if key not in data:
-                        data[key] = initial_data[key]
-                return data
-            except json.JSONDecodeError:
-                return initial_data
-    return initial_data
+# --- BAZA KODNI ICHIDA ---
+# Bu o'zgaruvchi JSON fayli vazifasini bajaradi
+db = {
+    "users": {}, # {login: {password, role}}
+    "teachers": [],
+    "students": [],
+    "achievers": [],
+    "news": [],
+    "admin_office": [],
+    "library": [],
+    "settings": {"background": "https://images.unsplash.com/photo-1509062522246-3755977927d7"}
+}
 
-def save_db(db):
-    with open(DB_FILE, "w", encoding="utf-8") as f:
-        json.dump(db, f, indent=4, ensure_ascii=False)
+# --- HTML DIZAYN ---
+BASE_HTML = """
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maktab Tizimi</title>
+    <style>
+        body { 
+            background: url('{{ db.settings.background }}') no-repeat center center fixed; 
+            background-size: cover; font-family: sans-serif; color: white; margin: 0;
+        }
+        .overlay { background: rgba(0,0,0,0.8); min-height: 100vh; padding: 20px; }
+        .box { max-width: 600px; margin: auto; background: rgba(255,255,255,0.1); padding: 20px; border-radius: 15px; backdrop-filter: blur(5px); }
+        .btn { display: block; background: #3498db; color: white; padding: 10px; margin: 10px 0; text-decoration: none; border-radius: 5px; text-align: center; border: none; width: 100%; cursor: pointer; }
+        input { width: 100%; padding: 10px; margin: 10px 0; border-radius: 5px; border: none; box-sizing: border-box; }
+        .card { background: rgba(255,255,255,0.15); padding: 10px; border-radius: 8px; margin-bottom: 10px; border-left: 5px solid #3498db; }
+    </style>
+</head>
+<body>
+    <div class="overlay">
+        <div class="box">
+            {% block content %}{% endblock %}
+        </div>
+    </div>
+</body>
+</html>
+"""
 
-# --- AVTORIZATSIYA ---
-def register(db):
-    print("\n--- RO'YXATDAN O'TISH ---")
-    login = input("Yangi login: ")
+@app.route('/')
+def index():
+    if 'user' not in session: return redirect('/auth')
+    return render_template_string(BASE_HTML + """
+        <h1>🏫 MAKTAB TIZIMI</h1>
+        <p>👤 Login: <b>{{ session.user }}</b> | 🛡️ Rol: <b style="color:yellow">{{ session.role.upper() }}</b></p>
+        <hr>
+        <a href="/view/teachers" class="btn">👨‍🏫 O'qituvchilar</a>
+        <a href="/view/students" class="btn">🎓 O'quvchilar</a>
+        <a href="/view/achievers" class="btn">🏆 Bilimdonlar</a>
+        <a href="/view/news" class="btn">📰 Yangiliklar</a>
+        <a href="/view/admin_office" class="btn">🏢 Ma'muriyat</a>
+        <a href="/view/library" class="btn">📚 Kutubxona</a>
+        
+        {% if session.role == 'super-admin' %}
+            <a href="/settings" class="btn" style="background:orange">⚙️ Fonni o'zgartirish</a>
+        {% endif %}
+        <a href="/logout" class="btn" style="background:red">🚪 Chiqish</a>
+    """, db=db)
+
+@app.route('/auth', methods=['GET', 'POST'])
+def auth():
+    if request.method == 'POST':
+        login = request.form['login']
+        pw = request.form['pw']
+        action = request.form['action']
+        
+        if action == "reg":
+            if login in db['users']: return "Bu login band! <a href='/auth'>Qaytish</a>"
+            # Birinchi kirgan foydalanuvchi Super-Admin bo'ladi
+            role = "super-admin" if len(db['users']) == 0 else "viewer"
+            db['users'][login] = {"password": pw, "role": role}
+            return f"Ro'yxatdan o'tdingiz! Rol: {role}. <a href='/auth'>Kirish</a>"
+        
+        if db['users'].get(login, {}).get('password') == pw:
+            session['user'] = login
+            session['role'] = db['users'][login]['role']
+            return redirect('/')
+        return "Xato! <a href='/auth'>Qaytish</a>"
+
+    return render_template_string(BASE_HTML + """
+        <h2>🔐 Kirish / Ro'yxatdan o'tish</h2>
+        <form method="post">
+            <input name="login" placeholder="Login" required>
+            <input name="pw" type="password" placeholder="Parol" required>
+            <button name="action" value="login" class="btn">Kirish</button>
+            <button name="action" value="reg" class="btn" style="background:green">Ro'yxatdan o'tish</button>
+        </form>
+    """, db=db)
+
+@app.route('/view/<section>', methods=['GET', 'POST'])
+def view_section(section):
+    if 'user' not in session: return redirect('/auth')
     
-    if login in db["users"]:
-        print("❌ Bu login band! Boshqasini tanlang.")
-        return None
-        
-    password = input("Yangi parol: ")
+    if request.method == 'POST' and session['role'] == 'super-admin':
+        name = request.form.get('name')
+        info = request.form.get('info')
+        db[section].append({"name": name, "info": info})
     
-    # Birinchi kirgan foydalanuvchini Super-Admin qilish mantiqi
-    if len(db["users"]) == 0:
-        role = "super-admin"
-        print("\n👑 TABRIKLAYMIZ! Siz tizimning birinchi foydalanuvchisiz. SUPER-ADMIN huquqi berildi!")
-    else:
-        role = "viewer"
-        print("\n👤 Siz 'Viewer' (Kuzatuvchi) sifatida ro'yxatga olindingiz.")
+    return render_template_string(BASE_HTML + """
+        <h2>📂 {{ section.upper() }}</h2>
+        {% for item in db[section] %}
+            <div class="card">
+                <b>{{ item.name }}</b><br>
+                <small>{{ item.info }}</small>
+            </div>
+        {% endfor %}
         
-    db["users"][login] = {"password": password, "role": role}
-    save_db(db)
-    return {"login": login, "role": role}
+        {% if session.role == 'super-admin' %}
+            <hr>
+            <h3>➕ Qo'shish</h3>
+            <form method="post">
+                <input name="name" placeholder="Nomi/Ismi" required>
+                <input name="info" placeholder="Ma'lumot">
+                <button class="btn" style="background:green">Saqlash</button>
+            </form>
+        {% endif %}
+        <a href="/" class="btn">Orqaga</a>
+    """, section=section, db=db)
 
-def login_system(db):
-    print("\n--- TIZIMGA KIRISH ---")
-    login = input("Login: ")
-    password = input("Parol: ")
-    
-    if login in db["users"] and db["users"][login]["password"] == password:
-        role = db["users"][login]["role"]
-        print(f"\n✅ Xush kelibsiz, {login}! (Rolingiz: {role.upper()})")
-        return {"login": login, "role": role}
-    else:
-        print("\n❌ Login yoki parol xato!")
-        return None
+@app.route('/settings', methods=['GET', 'POST'])
+def settings():
+    if session.get('role') != 'super-admin': return redirect('/')
+    if request.method == 'POST':
+        db['settings']['background'] = request.form['bg']
+        return redirect('/')
+    return render_template_string(BASE_HTML + """
+        <h2>⚙️ Sozlamalar</h2>
+        <form method="post">
+            <input name="bg" value="{{ db.settings.background }}" placeholder="Rasm URL manzili">
+            <button class="btn">Yangilash</button>
+        </form>
+        <a href="/" class="btn">Orqaga</a>
+    """, db=db)
 
-def auth_menu(db):
-    while True:
-        print("\n1. Kirish | 2. Ro'yxatdan o'tish | 0. Dasturdan chiqish")
-        choice = input("Tanlang: ")
-        if choice == "0":
-            return None
-        elif choice == "2":
-            user = register(db)
-            if user: return user
-        elif choice == "1":
-            user = login_system(db)
-            if user: return user
+@app.route('/logout')
+def logout():
+    session.clear()
+    return redirect('/')
 
-# --- BO'LIMLARNI BOSHqarish (Umumiy mantiq) ---
-def manage_section(db, current_user, section_key, section_name, fields):
-    while True:
-        print(f"\n=== 📚 {section_name.upper()} ===")
-        print("1. Ro'yxatni ko'rish")
-        if current_user["role"] == "super-admin":
-            print("2. Yangi ma'lumot qo'shish")
-        print("0. Orqaga")
-        
-        choice = input("\nTanlang: ")
-        
-        if choice == "0":
-            break
-        elif choice == "1":
-            items = db[section_key]
-            if not items:
-                print("ℹ️ Hozircha bu bo'lim bo'sh.")
-            else:
-                print("\n--- MA'LUMOTLAR ---")
-                for idx, item in enumerate(items, 1):
-                    # Birinchi maydonni ism/nom sifatida ko'rsatamiz
-                    first_field = list(fields.keys())[0]
-                    print(f"{idx}. {item[first_field]}")
-                    
-                detail = input("\nBatafsil ko'rish uchun raqamini kiriting (yoki 0 orqaga): ")
-                if detail.isdigit() and int(detail) > 0 and int(detail) <= len(items):
-                    selected = items[int(detail)-1]
-                    print("\n--- FAYLCHa ---")
-                    for key, val in fields.items():
-                        print(f"{val}: {selected.get(key, 'Noma\'lum')}")
-                    input("\n(Davom etish uchun Enter bosing...)")
-        
-        elif choice == "2" and current_user["role"] == "super-admin":
-            print(f"\n--- YANGI {section_name.upper()} QO'SHISH ---")
-            new_item = {}
-            for key, val in fields.items():
-                new_item[key] = input(f"{val} kiriting: ")
-            
-            db[section_key].append(new_item)
-            save_db(db)
-            print("✅ Ma'lumot muvaffaqiyatli saqlandi!")
-
-# --- ASOSIY MENYU ---
-def main_menu(user, device, db):
-    while True:
-        sep = "=" * 40 if device == "kompyuter" else "=" * 20
-        print(f"\n{sep}")
-        print(f"📱 MAKTAB TIZIMI ({device.upper()})")
-        print(f"👤 Foydalanuvchi: {user['login']} | 🛡️ Rol: {user['role'].upper()}")
-        print(f"🖼️ Orqa fon: {db['settings']['background']}")
-        print(f"{sep}")
-        print("1. 👨‍🏫 O'qituvchilar")
-        print("2. 🎓 O'quvchilar")
-        print("3. 🏆 Maktab bilimdonlari")
-        print("4. 📰 Yangiliklar")
-        print("5. 🏢 Ma'muriyat")
-        print("6. 📚 Kutubxona")
-        if user["role"] == "super-admin":
-            print("7. ⚙️ Tizim sozlamalari (Fonni o'zgartirish)")
-        print("0. 🚪 Chiqish")
-        
-        choice = input("\nBo'limni tanlang: ")
-        
-        if choice == "0":
-            print("Tizimdan chiqilmoqda...")
-            time.sleep(1)
-            break
-            
-        elif choice == "1":
-            manage_section(db, user, "teachers", "O'qituvchilar", {"name": "Ism-Familiya", "subject": "Fan", "year": "Tug'ilgan yili", "photo": "Rasm manzili (URL/Path)"})
-        elif choice == "2":
-            manage_section(db, user, "students", "O'quvchilar", {"name": "Ism-Familiya", "grade": "Sinfi", "teacher_id": "Biriktirilgan ustoz ismi", "photo": "Rasm manzili"})
-        elif choice == "3":
-            manage_section(db, user, "achievers", "Maktab bilimdonlari", {"name": "O'quvchi ismi", "achievement": "Yutug'i (Olimpiada/Sertifikat)", "date": "Olingan vaqti"})
-        elif choice == "4":
-            manage_section(db, user, "news", "Yangiliklar", {"title": "Sarlavha", "content": "Matni", "media": "Rasm/Video manzili"})
-        elif choice == "5":
-            manage_section(db, user, "admin_office", "Ma'muriyat", {"name": "Ism-Familiya", "position": "Lavozimi", "contact": "Bog'lanish ma'lumotlari"})
-        elif choice == "6":
-            manage_section(db, user, "library", "Kutubxona", {"title": "Kitob nomi", "author": "Muallif", "genre": "Janri", "status": "Holati (Mavjud/Band)"})
-            
-        elif choice == "7" and user["role"] == "super-admin":
-            print("\n--- ⚙️ SOZLAMALAR ---")
-            new_bg = input("Yangi orqa fon rasmi yo'lini (path) kiriting: ")
-            db["settings"]["background"] = new_bg
-            save_db(db)
-            print("✅ Fon muvaffaqiyatli yangilandi!")
-        else:
-            print("❌ Noto'g'ri buyruq.")
-
-# --- DASTURNI BOSHLASH ---
-def start_app():
-    print("=== MAKTAB AXBOROT TIZIMIGA XUSH KELIBSIZ ===")
-    
-    # Qurilmani tanlash (UI simulyatsiyasi uchun)
-    print("\nQurilmani tanlang: 1. Telefon 📱 | 2. Kompyuter 💻")
-    device_choice = input("Tanlov (1 yoki 2): ")
-    device = "telefon" if device_choice == "1" else "kompyuter"
-    
-    db = load_db()
-    current_user = auth_menu(db)
-    
-    if current_user:
-        main_menu(current_user, device, db)
-
-if __name__ == "__main__":
-    start_app()
+if __name__ == '__main__':
+    app.run(debug=True)
+L
