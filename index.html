@@ -1,140 +1,699 @@
-<!DOCTYPE html>
-<html lang="uz">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>norinIM | Maktab Tizimi</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;700;900&display=swap');
-        body { font-family: 'Inter', sans-serif; background-color: #f0f2f5; }
-        .old-money { font-family: 'Playfair Display', serif; }
-        .page { display: none; }
-        .page.active { display: block; }
-        .sidebar-link { transition: all 0.2s; border-radius: 12px; padding: 12px; margin-bottom: 4px; display: block; width: 100%; text-align: left; }
-        .sidebar-link:hover { background: rgba(37, 99, 235, 0.1); color: #2563eb; }
-        .sidebar-link.active { background: #2563eb; color: white; }
-    </style>
-</head>
-<body class="flex min-h-screen">
+def start_app():
+    print("--- Xush kelibsiz! ---")
+    print("1. Telefon")
+    print("2. Kompyuter")
+    
+    choice = input("Qurilma turini tanlang (1 yoki 2): ")
 
-    <div id="login-screen" class="fixed inset-0 z-[100] bg-[#0A1128] flex items-center justify-center p-6">
-        <div class="bg-white p-10 rounded-[2.5rem] shadow-2xl w-full max-w-md text-center">
-            <h2 class="old-money text-4xl mb-2 italic text-[#0A1128]">norin<span class="text-blue-600">IM</span></h2>
-            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-8">Admin: Temurbek Burhonov</p>
-            <div class="space-y-4">
-                <input id="u" type="text" placeholder="Login" class="w-full p-4 bg-slate-100 rounded-2xl outline-none focus:ring-2 focus:ring-blue-600">
-                <input id="p" type="password" placeholder="Parol" class="w-full p-4 bg-slate-100 rounded-2xl outline-none focus:ring-2 focus:ring-blue-600">
-                <button onclick="handleLogin()" class="w-full py-4 bg-[#0A1128] text-white rounded-2xl font-black shadow-lg">TIZIMNI OCHISH</button>
-            </div>
-        </div>
-    </div>
+    if choice == "1":
+        mobile_interface()
+    elif choice == "2":
+        desktop_interface()
+    else:
+        print("Xato tanlov! Iltimos, qaytadan urinib ko'ring.")
+        start_app()
 
-    <div id="app" class="hidden flex w-full">
-        <aside class="w-64 bg-white border-r p-6 hidden md:block">
-            <div class="old-money text-2xl font-black italic mb-10 text-[#0A1128]">norin<span class="text-blue-600">IM</span></div>
-            <nav class="text-sm font-bold text-slate-500 uppercase tracking-tighter">
-                <button onclick="showPage('dashboard')" class="sidebar-link active" id="btn-dashboard">📊 Dashboard</button>
-                <button onclick="showPage('students')" class="sidebar-link" id="btn-students">👥 Sinfdoshlar</button>
-                <button onclick="showPage('olympiad')" class="sidebar-link" id="btn-olympiad">🏆 Olimpiadalar</button>
-                <button onclick="showPage('cyber')" class="sidebar-link" id="btn-cyber">🛡️ Kiberxavfsizlik</button>
-            </nav>
-        </aside>
+def mobile_interface():
+    # Telefon uchun ixcham va vertikal menyu
+    print("\n[ Mobil Interfeys Faollashdi ]")
+    print("Menyular vertikal holatda, sensorli ekranga moslangan.")
+    # Bu yerga mobil menyu elementlarini qo'shamiz
 
-        <main class="flex-1 p-8 overflow-y-auto">
-            <header class="flex justify-between items-center mb-10">
-                <h2 id="page-title" class="old-money text-3xl text-[#0A1128]">Boshqaruv Paneli</h2>
-                <div class="flex items-center gap-4">
-                    <span class="text-[10px] font-black bg-blue-600 text-white px-3 py-1 rounded-full uppercase">Super Admin</span>
-                    <button onclick="location.reload()" class="text-slate-400 hover:text-red-600 font-bold">Logout</button>
-                </div>
-            </header>
+def desktop_interface():
+    # Kompyuter uchun kengroq va gorizontal menyu
+    print("\n[ Kompyuter Interfeysi Faollashdi ]")
+    print("Menyular keng ekranga moslangan, klaviatura va sichqoncha yordamida boshqariladi.")
+    # Bu yerga kompyuter menyu elementlarini qo'shamiz
 
-            <section id="dashboard" class="page active">
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div class="p-8 bg-white rounded-3xl shadow-sm border border-slate-100">
-                        <p class="text-xs font-black text-slate-400 uppercase">Yutuqlarim</p>
-                        <h3 class="text-4xl font-black mt-2">1-o'rin</h3>
-                    </div>
-                    <div class="p-8 bg-white rounded-3xl shadow-sm border border-slate-100">
-                        <p class="text-xs font-black text-slate-400 uppercase">Sinf Reytingi</p>
-                        <h3 class="text-4xl font-black mt-2 text-blue-600">Top-1</h3>
-                    </div>
-                </div>
-            </section>
+# Dasturni ishga tushirish
+if __name__ == "__main__":
+    start_app()
+def auth_menu(device_type):
+    print(f"\n--- {device_type.capitalize()} uchun kirish bo'limi ---")
+    print("1. Login (Kirish)")
+    print("2. Sign In (Ro'yxatdan o'tish)")
+    
+    choice = input("Tanlovingizni kiriting (1 yoki 2): ")
 
-            <section id="students" class="page">
-                <div class="bg-white rounded-3xl shadow-sm border overflow-hidden">
-                    <table class="w-full text-left">
-                        <thead class="bg-slate-50 border-b">
-                            <tr>
-                                <th class="p-6 text-xs font-black uppercase text-slate-400">F.I.SH</th>
-                                <th class="p-6 text-xs font-black uppercase text-slate-400">Yutuqlar</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr class="border-b">
-                                <td class="p-6 font-bold">Burhonov Temurbek</td>
-                                <td class="p-6 text-blue-600 font-bold italic">Olimpiada G'olibi</td>
-                            </tr>
-                            <tr class="border-b">
-                                <td class="p-6 font-bold text-slate-600">Sinfdosh (Namuna)</td>
-                                <td class="p-6 text-slate-400">Faol</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </section>
+    if choice == "1":
+        login_process()
+    elif choice == "2":
+        signin_process()
+    else:
+        print("Noto'g'ri buyruq!")
+        auth_menu(device_type)
 
-            <section id="olympiad" class="page">
-                <div class="p-10 bg-[#0A1128] text-white rounded-[3rem] shadow-2xl">
-                    <h3 class="old-money text-3xl mb-6 italic italic underline decoration-blue-600">Olimpiadalar 2026</h3>
-                    <div class="space-y-4">
-                        <div class="p-4 bg-white/5 border border-white/10 rounded-2xl flex justify-between">
-                            <span>Matematika (Aprel 14)</span>
-                            <span class="font-black text-yellow-400 uppercase">1-O'RIN WINNER</span>
-                        </div>
-                    </div>
-                </div>
-            </section>
+def login_process():
+    print("\n--- Tizimga kirish ---")
+    username = input("Username: ")
+    password = input("Parol: ")
+    # Bu yerda bazadagi ma'lumotlar bilan tekshirish mantiqi bo'ladi
+    print(f"Xush kelibsiz, {username}!")
 
-            <section id="cyber" class="page">
-                <div class="p-10 bg-white border-2 border-red-100 rounded-[3rem]">
-                    <h3 class="old-money text-3xl text-red-600 mb-6 italic">Cyber-Security Lab</h3>
-                    <p class="text-sm text-slate-500 font-bold mb-4 uppercase tracking-widest">Temurbekning shaxsiy ishlanmalari:</p>
-                    <ul class="space-y-2 text-slate-700 font-medium">
-                        <li>🔑 Tizim login-parol himoyasi: <span class="text-green-600">Faol</span></li>
-                        <li>🛡️ Ma'lumotlarni shifrlash: <span class="text-green-600">Beta</span></li>
-                    </ul>
-                </div>
-            </section>
-        </main>
-    </div>
+def signin_process():
+    print("\n--- Ro'yxatdan o'tish ---")
+    new_user = input("Yangi username tanlang: ")
+    new_pass = input("Parol yarating: ")
+    confirm_pass = input("Parolni tasdiqlang: ")
+    
+    if new_pass == confirm_pass:
+        print("Muvaffaqiyatli ro'yxatdan o'tdingiz!")
+    else:
+        print("Parollar mos kelmadi, qaytadan urinib ko'ring.")
+        signin_process()
 
-    <script>
-        const AUTH = { u: "owner_admin", p: "Maktab_2026_Global" };
+# Yuqoridagi start_app funksiyasiga auth_menu ni ulab qo'yamiz:
+def mobile_interface():
+    print("\n[ Mobil Interfeys Faollashdi ]")
+    auth_menu("telefon")
 
-        function handleLogin() {
-            if(document.getElementById('u').value === AUTH.u && document.getElementById('p').value === AUTH.p) {
-                document.getElementById('login-screen').style.display = 'none';
-                document.getElementById('app').classList.remove('hidden');
-            } else { alert("Login yoki parol xato!"); }
-        }
+def desktop_interface():
+    print("\n[ Kompyuter Interfeysi Faollashdi ]")
+    auth_menu("kompyuter")
+def signin_process(device):
+    print("\n--- 📝 Ro'yxatdan o'tish ---")
+    new_user = input("Yangi username: ")
+    new_pass = input("Parol yarating: ")
+    
+    # Rolni tanlash qismi
+    print("\nSiz tizimda kim sifatida ishlamoqchisiz?")
+    print("1. Admin (To'liq boshqaruv)")
+    print("2. Ko'ruvchi (Faqat ko'rish huquqi)")
+    
+    role_choice = input("Tanlang (1 yoki 2): ")
+    
+    if role_choice == "1":
+        user_role = "Admin"
+    elif role_choice == "2":
+        user_role = "Ko'ruvchi"
+    else:
+        print("Xato tanlov! Avtomatik 'Ko'ruvchi' etib belgilandi.")
+        user_role = "Ko'ruvchi"
 
-        function showPage(id) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.querySelectorAll('.sidebar-link').forEach(b => b.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-            document.getElementById('btn-' + id).classList.add('active');
+    print(f"\n✅ Muvaffaqiyatli! {new_user} siz {user_role} sifatida ro'yxatdan o'tdingiz.")
+    
+    # Ro'yxatdan o'tgach, asosiy menyuga o'tamiz
+    main_menu(device, user_role)
+
+def main_menu(device, role):
+    if device == "telefon":
+        print(f"\n📱 MOBIL INTERFEYS | Rol: {role}")
+        print("-" * 25)
+        if role == "Admin":
+            print("[1] Boshqaruv paneli (Full Access)")
+            print("[2] Foydalanuvchilar ro'yxati")
+        print("[3] Ma'lumotlarni ko'rish")
+        print("[4] Chiqish")
+
+    elif device == "kompyuter":
+        print(f"\n💻 KOMPYUTER INTERFEYSI | Rol: {role}")
+        print("=" * 40)
+        if role == "Admin":
+            print("| ADMIN PANEL: Tizim sozlamalari | Statistika |")
+        print("| FOYDALANUVCHI: Ma'lumotlar | Arxiv | Sozlamalar |")
+        print("=" * 40)
+
+    choice = input("\nBuyruqni tanlang: ")
+import time
+
+# Foydalanuvchi holati (oddiy holatda hamma 'viewer')
+user_role = "viewer" 
+
+def admin_request_process(device):
+    print("\n--- 🛡️ Adminlik huquqi uchun so'rov ---")
+    print("Admin bo'lish uchun so'rov yuborasizmi? (5 kunlik sinov muddati boshlanadi)")
+    confirm = input("Ha (1) / Yo'q (2): ")
+
+    if confirm == "1":
+        # Super Adminga request yuborish simulyatsiyasi
+        send_request_to_super_admin(device)
+    else:
+        print("Siz 'Viewer' (Kuzatuvchi) bo'lib qoldingiz.")
+        show_content(device, role="viewer")
+
+def send_request_to_super_admin(device):
+    print("\n[ Tizim ]: Super Adminga so'rov yuborildi...")
+    time.sleep(1) # Kutish jarayoni
+    
+    # Bu qismda Super Admin (Siz) qaror qabul qilasiz
+    print("\n--- ⚡ SUPER ADMIN PANEL (Siz uchun) ---")
+    decision = input("Yangi foydalanuvchiga Adminlik huquqini berasizmi? (ha/yoq): ").lower()
+
+    if decision == "ha":
+        print("Muvaffaqiyatli! Foydalanuvchi endi 'Admin' huquqiga ega.")
+        show_content(device, role="admin")
+    else:
+        print("So'rov rad etildi. Foydalanuvchi 'Viewer' bo'lib qoladi.")
+        show_content(device, role="viewer")
+
+def show_content(device, role):
+    if device == "telefon":
+        print("\n📱 [ Mobil Interfeys ]")
+    else:
+        print("\n💻 [ Kompyuter Interfeysi ]")
+
+    if role == "admin":
+        print("Sizda ADMIN huquqi bor: ✅ Ma'lumotlarni o'zgartirishingiz mumkin.")
+        # Admin uchun tahrirlash menyulari shu yerda chiqadi
+    else:
+        print("Siz VIEWER holatidasiz: 👁️ Faqat ma'lumotlarni ko'rishingiz mumkin.")
+        # Viewer uchun cheklangan menyu
+
+# Interfeysni boshlash uchun:
+# admin_request_process("kompyuter") yoki admin_request_process("telefon")
+def main_dashboard(device, role):
+    # Qurilma turiga qarab sarlavha
+    if device == "telefon":
+        header = "📱 MOBIL ILOVA: MAKTAB TIZIMI"
+        sep = "---------------------------"
+    else:
+        header = "💻 KOMPYUTER: MAKTAB BOSHQARUV PANEL"
+        sep = "--------------------------------------------------------"
+
+    print(f"\n{header}")
+    print(f"Rol: {'[ADMIN]' if role == 'admin' else '[VIEWER]'}")
+    print(sep)
+    
+    # Sening menyularing ro'yxati
+    menus = [
+        "1. O'qituvchilar",
+        "2. O'quvchilar",
+        "3. Maktab bilimdonlari",
+        "4. Yangiliklar",
+        "5. Maktab ma'muriyati"
+    ]
+
+    # Kompyuterda menyularni chiroyliroq chiqarish
+    if device == "kompyuter":
+        for menu in menus:
+            # Admin bo'lsa oxirida 'Tahrirlash' belgisi chiqadi
+            status = " [O'zgartirish huquqi bor]" if role == "admin" else " [Faqat ko'rish]"
+            print(f"| {menu.ljust(25)} {status} |")
+        print(sep)
+    else:
+        # Mobilda vertikal va oddiyroq
+        for menu in menus:
+            print(menu)
+    
+    print("\n[0] Chiqish")
+    
+    choice = input("\nBo'limni tanlang: ")
+    handle_menu_choice(choice, role, device)
+
+def handle_menu_choice(choice, role, device):
+    if choice == "0":
+        print("Tizimdan chiqilmoqda...")
+        return
+    
+    # Hozircha umumiy tekshiruv
+    if role == "viewer":
+        print(f"\n⚠️ SIZ VIEWERSiz: {choice}-bo'lim ma'lumotlarini faqat ko'ra olasiz.")
+        # Bu yerda faqat list_data() funksiyasi chaqiriladi
+    elif role == "admin":
+        print(f"\n⚡ SIZ ADMINSIZ: {choice}-bo'limda tahrirlash huquqi faollashdi.")
+        # Bu yerda edit_data() funksiyasi chaqiriladi
+    else:
+        print("Noma'lum tanlov.")
+
+# Ishlatib ko'rish (misol uchun):
+# main_dashboard("kompyuter", "admin")
+import os
+
+# Ma'lumotlarni saqlash uchun vaqtinchalik baza (keyinchalik faylga ulaymiz)
+teachers_db = []
+
+def teacher_management(device, role):
+    print(f"\n=== 👨‍🏫 O'QITUVCHILAR BO'LIMI ({device.upper()}) ===")
+    
+    if role == "admin":
+        print("[1] Yangi o'qituvchi ma'lumotlarini qo'shish")
+        print("[2] Ro'yxatni ko'rish va tahrirlash")
+        print("[0] Orqaga")
+        
+        choice = input("\nTanlovingiz: ")
+        
+        if choice == "1":
+            add_new_teacher()
+        elif choice == "2":
+            view_teachers(role)
+    else:
+        # Viewer faqat ko'ra oladi
+        view_teachers(role)
+
+def add_new_teacher():
+    print("\n--- ➕ Yangi o'qituvchi qo'shish paneli ---")
+    
+    # Ma'lumotlarni admin o'zi kiritadi
+    fullname = input("Ism va Familiyani kiriting: ")
+    subject = input("Qaysi fandan dars beradi: ")
+    birth_year = input("Tug'ilgan yili: ")
+    
+    # Kompyuterdagi rasm manzili (Admin rasmni joylashgan joyini yozadi)
+    photo_path = input("Rasm joylashgan manzilni kiriting (masalan: C:/rasmlar/ustoz.jpg): ")
+    
+    # Faylcha ko'rinishida saqlash
+    teacher_entry = {
+        "id": len(teachers_db) + 1,
+        "name": fullname,
+        "subject": subject,
+        "year": birth_year,
+        "photo": photo_path
+    }
+    
+    teachers_db.append(teacher_entry)
+    print(f"\n✅ Tizim: {fullname} muvaffaqiyatli qo'shildi!")
+
+def view_teachers(role):
+    if not teachers_db:
+        print("\nℹ️ Hozircha o'qituvchilar qo'shilmagan.")
+        return
+
+    print("\n--- 📜 O'qituvchilar ro'yxati ---")
+    for t in teachers_db:
+        print(f"ID: {t['id']} | {t['name']} - {t['subject']}")
+    
+    detail = input("\nBatafsil ma'lumot faylini ochish uchun ID ni kiriting (yoki 0): ")
+    
+    if detail != "0":
+        for t in teachers_db:
+            if str(t['id']) == detail:
+                print(f"\n--- 📄 {t['name']} haqida ma'lumot ---")
+                print(f"🖼️ Rasm fayli: {t['photo']}")
+                print(f"👤 Ism: {t['name']}")
+                print(f"📚 Fan: {t['subject']}")
+                print(f"📅 Tug'ilgan yil: {t['year']}")
+                
+                if role == "admin":
+                    print("\n[Admin Opsiyalari]: 1.O'chirish | 2.O'zgartirish")
+# O'quvchilar ma'lumotlar bazasi
+students_db = []
+
+def student_management(device, role):
+    print(f"\n=== 🎓 O'QUVCHILAR BO'LIMI ({device.upper()}) ===")
+    
+    if role == "admin":
+        print("[1] Yangi o'quvchi qo'shish")
+        print("[2] O'quvchilar ro'yxati")
+        choice = input("\nTanlang: ")
+        
+        if choice == "1":
+            add_new_student()
+        else:
+            view_students(role)
+    else:
+        view_students(role)
+
+def add_new_student():
+    print("\n--- 📝 Yangi o'quvchi ma'lumotlarini kiritish ---")
+    fullname = input("Ism va Familiya: ")
+    birth_year = input("Tug'ilgan yili: ")
+    photo = input("Rasm manzili (path): ")
+    
+    # O'qituvchini bog'lash (Link qilish)
+    print("\nBazadagi mavjud o'qituvchilar:")
+    if not teachers_db:
+        print("! Avval o'qituvchi qo'shishingiz kerak.")
+        assigned_teacher_id = None
+    else:
+        for t in teachers_db:
+            print(f"ID: {t['id']} | Ism: {t['name']}")
+        assigned_teacher_id = input("Ushbu o'quvchiga dars beradigan ustoz ID sini tanlang: ")
+
+    student_entry = {
+        "id": len(students_db) + 1,
+        "name": fullname,
+        "year": birth_year,
+        "photo": photo,
+        "teacher_link": assigned_teacher_id  # Ustoz fayliga link
+    }
+    
+    students_db.append(student_entry)
+    print(f"\n✅ O'quvchi '{fullname}' tizimga va ustoz fayliga ulandi!")
+
+def view_students(role):
+    print("\n--- 📜 O'quvchilar ro'yxati ---")
+    for s in students_db:
+        print(f"ID: {s['id']} | {s['name']}")
+
+    choice = input("\nO'quvchi faylini ochish (ID): ")
+    for s in students_db:
+        if str(s['id']) == choice:
+            print(f"\n--- 📄 O'QUVCHI FAYLI: {s['name']} ---")
+            print(f"🖼️ Rasm: {s['photo']}")
+            print(f"📅 Tug'ilgan yili: {s['year']}")
             
-            const titles = {
-                dashboard: "Boshqaruv Paneli",
-                students: "Sinfdoshlar Ro'yxati",
-                olympiad: "Olimpiada Natijalari",
-                cyber: "Kiberxavfsizlik Burchagi"
-            };
-            document.getElementById('page-title').innerText = titles[id];
+            # LINK QISMI: Ustoz ma'lumotiga o'tish
+            if s['teacher_link']:
+                print(f"👨‍🏫 Biriktirilgan ustoz ID: {s['teacher_link']} (O'tish uchun 'u' bosing)")
+                action = input("Amalni tanlang: ").lower()
+                if action == 'u':
+                    # Ustoz fayliga link orqali o'tish
+                    jump_to_teacher(s['teacher_link'])
+            else:
+                print("👨‍🏫 Ustoz biriktirilmagan.")
+
+def jump_to_teacher(teacher_id):
+    for t in teachers_db:
+        if str(t['id']) == teacher_id:
+            print(f"\n--- 🔗 LINK ORQALI O'TILDI: {t['name']} ---")
+            print(f"📚 Fani: {t['subject']}")
+            # Bu yerda ustozning to'liq fayli ko'rsatiladi
+# Bilimdonlar uchun maxsus ma'lumotlar bazasi
+honored_students_db = []
+
+def honored_section(device, role):
+    print(f"\n=== 🏅 BILIMDONLAR: SERTIFIKAT VA OLIMPIADALAR ({device.upper()}) ===")
+    
+    if role == "admin":
+        print("[1] Yangi sertifikat/yutuq faylini qo'shish")
+        print("[2] Bilimdonlar ro'yxatini ko'rish")
+        choice = input("\nTanlang: ")
+        
+        if choice == "1":
+            add_honor_file()
+        else:
+            view_honor_files(role)
+    else:
+        view_honor_files(role)
+
+def add_honor_file():
+    print("\n--- 📄 Yangi yutuq faylini yaratish ---")
+    student_name = input("O'quvchi ism-familiyasi: ")
+    achievement_type = input("Yutuq turi (Sertifikat / Olimpiada / Tashakkurnoma): ")
+    subject_or_event = input("Qaysi fan yoki tadbir bo'yicha: ")
+    
+    # Sertifikat rasmini admin yuklaydi
+    cert_photo = input("Sertifikat/Diplom rasmi manzili (C:/.../img.jpg): ")
+    date_received = input("Olingan vaqti (yil/oy): ")
+
+    honor_entry = {
+        "id": len(honored_students_db) + 1,
+        "name": student_name,
+        "type": achievement_type,
+        "subject": subject_or_event,
+        "photo": cert_photo,
+        "date": date_received
+    }
+    
+    honored_students_db.append(honor_entry)
+    print(f"\n✅ Tizim: {student_name}ning '{achievement_type}' fayli muvaffaqiyatli saqlandi!")
+
+def view_honor_files(role):
+    if not honored_students_db:
+        print("\nℹ️ Hozircha sertifikat olgan o'quvchilar yo'q.")
+        return
+
+    print("\n--- 🎖️ BILIMDONLAR PORTFOLIOLARI ---")
+    for h in honored_students_db:
+        print(f"ID: {h['id']} | {h['name']} - {h['type']} ({h['subject']})")
+
+    choice = input("\nBatafsil faylni ochish uchun ID ni bosing (yoki 0): ")
+    
+    for h in honored_students_db:
+        if str(h['id']) == choice:
+            print(f"\n--- 📁 BILIMDON FAYLI: {h['name']} ---")
+            print(f"🏅 Yutuq turi: {h['type']}")
+            print(f"📚 Yo'nalish: {h['subject']}")
+            print(f"📅 Sana: {h['date']}")
+            print(f"🖼️ Sertifikat rasmi: {h['photo']}")
+            
+            if role == "admin":
+                print("\n[Admin]: 1. Faylni tahrirlash | 2. O'chirish")
+# Multimedia yangiliklar bazasi
+news_feed = []
+
+def multimedia_news_section(device, role):
+    print(f"\n=== 📢 MAKTAB HAYOTI: TADBIR VA YANGILIKLAR ({device.upper()}) ===")
+    
+    if role == "admin":
+        print("[1] Yangi Multimedia Post (Tadbir, Sertifikat, Event)")
+        print("[2] Lentani ko'rish")
+        print("[3] Postni tahrirlash/o'chirish")
+        
+        choice = input("\nTanlang: ")
+        if choice == "1":
+            create_multimedia_post()
+        elif choice == "2":
+            display_feed(role)
+    else:
+        display_feed(role)
+
+def create_multimedia_post():
+    print("\n--- 📸 Yangi kontent yuklash ---")
+    
+    # Yangilik turi (Kategoriya)
+    print("Kategoriyalar: 1.Tadbir (Event) | 2.Sertifikat | 3.Yangi e'lon")
+    cat_type = input("Turini tanlang (1/2/3): ")
+    types = {"1": "Tadbir 🎭", "2": "Sertifikat 🎓", "3": "E'lon 📢"}
+    category = types.get(cat_type, "Umumiy")
+
+    title = input("Sarlavha: ")
+    info = input("Batafsil ma'lumot: ")
+    
+    # Fayl manzillari (Kompyuterdan admin tomonidan kiritiladi)
+    photo_path = input("Rasm manzili (bo'sh bo'lishi mumkin): ")
+    video_path = input("Video manzili (bo'sh bo'lishi mumkin): ")
+    
+    post = {
+        "id": len(news_feed) + 1,
+        "category": category,
+        "title": title,
+        "info": info,
+        "media": {"photo": photo_path, "video": video_path},
+        "date": "10.05.2026" # Avtomatik sana
+    }
+    
+    news_feed.append(post)
+    print(f"\n✅ {category} muvaffaqiyatli yuklandi!")
+
+def display_feed(role):
+    if not news_feed:
+        print("\n📭 Hozircha yangiliklar yo'q.")
+        return
+
+    for post in reversed(news_feed):
+        print(f"\n{'='*40}")
+        print(f"{post['category']} | 📅 {post['date']}")
+        print(f"📌 {post['title']}")
+        print(f"📝 {post['info']}")
+        
+        # Multimedia qismini ko'rsatish
+        if post['media']['photo']:
+            print(f"🖼️ Rasm yuklangan: {post['media']['photo']}")
+        if post['media']['video']:
+            print(f"🎥 Video yuklangan: {post['media']['video']}")
+        
+        # Agar bu sertifikat bo'lsa, o'quvchi profiliga link qo'shish mumkin
+        if "Sertifikat" in post['category']:
+            print("🔗 Ushbu o'quvchi profiliga o'tish")
+        print(f"{'='*40}")
+
+    input("\nOrqaga qaytish uchun Enter bosing...")
+def add_administration_member():
+    print("\n--- 💼 Yangi ma'muriyat a'zosi faylini yaratish ---")
+    
+    # Ma'lumotlarni Admin kiritadi
+    name = input("Ism va Familiya: ")
+    position = input("Lavozimi (Masalan: Direktor): ")
+    specialization = input("Mutaxassislik yo'nalishi (Masalan: Boshqaruv va Pedagogika): ")
+    photo_path = input("Rasm fayli manzili: ")
+    
+    # Faylcha ko'rinishida saqlash
+    member_entry = {
+        "id": len(administration_db) + 1,
+        "name": name,
+        "position": position,
+        "specialization": specialization,
+        "photo": photo_path
+    }
+    
+    administration_db.append(member_entry)
+    print(f"\n✅ '{name}' uchun faylcha yaratildi va tizimga yuklandi.")
+
+def view_administration(role):
+    # Ro'yxatni ko'rsatish
+    for m in administration_db:
+        print(f"ID: {m['id']} | {m['position']}: {m['name']}")
+    
+    # Faylni tanlab ochish
+    choice = input("\nFaylcha ichini ko'rish uchun ID ni kiriting: ")
+    for m in administration_db:
+        if str(m['id']) == choice:
+            print(f"\n{'='*30}")
+            print(f"🖼️ Rasm: {m['photo']}")
+            print(f"👤 Ism: {m['name']}")
+            print(f"👔 Lavozim: {m['position']}")
+            print(f"🎯 Mutaxassislik: {m['specialization']}")
+            print(f"{'='*30}")
+# Tizim sozlamalari (vaqtinchalik xotirada)
+app_settings = {
+    "background_image": "default_background.jpg"  # Standart fon
+}
+
+def settings_menu(role):
+    if role != "admin":
+        print("❌ Faqat adminlar sozlamalarni o'zgartira oladi.")
+        return
+
+    print("\n--- ⚙️ TIZIM SOZLAMALARI ---")
+    print(f"Hozirgi fon: {app_settings['background_image']}")
+    print("[1] Orqa fon rasmini yangilash")
+    print("[0] Orqaga")
+    
+    choice = input("Tanlang: ")
+    if choice == "1":
+        new_path = input("Yangi fon rasmi manzilini kiriting: ")
+        app_settings["background_image"] = new_path
+        print(f"\n✅ Orqa fon muvaffaqiyatli yangilandi: {new_path}")
+
+# Dastur boshlanganda fonni yuklash
+def apply_background():
+    print(f"\n[Dastur]: {app_settings['background_image']} rasmi yuklanmoqda...")
+    # Bu yerda haqiqiy grafik kutubxonalar (Tkinter/PyQt) yordamida rasm o'rnatiladi
+# Kutubxona bazasi
+library_db = []
+
+def library_section(device, role):
+    print(f"\n=== 📚 KUTUBXONA ({device.upper()}) ===")
+    
+    if role == "admin":
+        print("[1] Yangi kitob qo'shish")
+        print("[2] Kitoblar ro'yxatini ko'rish")
+        choice = input("\nTanlang: ")
+        
+        if choice == "1":
+            add_book()
+        else:
+            view_books()
+    else:
+        view_books()
+
+def add_book():
+    print("\n--- 📖 Yangi kitob kiritish ---")
+    title = input("Kitob nomi: ")
+    author = input("Muallif: ")
+    genre = input("Janri: ")
+    photo = input("Kitob muqovasi rasmi (path): ")
+    
+    book = {
+        "id": len(library_db) + 1,
+        "title": title,
+        "author": author,
+        "genre": genre,
+        "photo": photo,
+        "status": "Mavjud"
+    }
+    library_db.append(book)
+    print(f"\n✅ '{title}' kutubxona bazasiga qo'shildi!")
+
+def view_books():
+    if not library_db:
+        print("\nℹ️ Hozircha kutubxonada kitob yo'q.")
+        return
+
+    print("\n--- 📚 KUTUBXONA KITOBLARI ---")
+    for b in library_db:
+        print(f"[{b['status']}] {b['id']}. {b['title']} - {b['author']}")
+    
+    # Kitob faylini ochish
+    choice = input("\nBatafsil ma'lumot uchun ID ni kiriting: ")
+    for b in library_db:
+        if str(b['id']) == choice:
+            print(f"\n--- 📄 KITOB FAYLI ---")
+            print(f"🖼️ Muqova: {b['photo']}")
+            print(f"📖 Nomi: {b['title']}")
+            print(f"✍️ Muallif: {b['author']}")
+            print(f"🎭 Janr: {b['genre']}")
+import json
+import os
+
+# Ma'lumotlarni saqlash uchun fayl nomlari
+DATA_FILE = "maktab_bazasi.json"
+
+# Asosiy baza strukturasi
+db = {
+    "teachers": [],
+    "students": [],
+    "achievers": [],
+    "news": [],
+    "administration": [],
+    "library": [],
+    "settings": {"background": "default.jpg"}
+}
+
+# Fayldan ma'lumotlarni yuklash
+def load_data():
+    global db
+    if os.path.exists(DATA_FILE):
+        with open(DATA_FILE, "r", encoding="utf-8") as f:
+            db = json.load(f)
+
+# Ma'lumotlarni faylga saqlash
+def save_data():
+    with open(DATA_FILE, "w", encoding="utf-8") as f:
+        json.dump(db, f, indent=4, ensure_ascii=False)
+
+def add_teacher_to_db(role):
+    if role != "admin": return
+    print("\n--- Yangi o'qituvchi qo'shish ---")
+    teacher = {
+        "id": len(db["teachers"]) + 1,
+        "name": input("Ism-Familiya: "),
+        "subject": input("Fani: "),
+        "year": input("Tug'ilgan yili: "),
+        "photo": input("Rasm yo'li: ")
+    }
+    db["teachers"].append(teacher)
+    save_data() # Har bir qo'shishdan keyin saqlaydi
+    print("✅ Ma'lumot saqlandi!")
+
+def main_app():
+    load_data() # Dastur boshlanishida hamma narsani yuklaydi
+    
+    print("1. Telefon | 2. Kompyuter")
+    device = "telefon" if input("Tanlang: ") == "1" else "kompyuter"
+    
+    # ... Bu yerda yuqorida biz kelishgan barcha login va menyu mantiqlari bo'ladi ...
+    # Admin ma'lumot kiritsa save_data() funksiyasi ishlaydi.
+
+if __name__ == "__main__":
+    main_app()
+def auth_logic():
+    # Foydalanuvchilar bazasi (shunchaki o'zgaruvchi sifatida)
+    users = {
+        "admin": {"password": "123", "role": "admin"},
+        "viewer": {"password": "000", "role": "viewer"}
+    }
+
+    choice = input("1. Kirish | 2. Ro'yxatdan o'tish: ")
+
+    # --- RO'YXATDAN O'TISH ---
+    if choice == "2":
+        new_login = input("Yangi login: ")
+        if new_login in users:
+            print("Bu login band!")
+            return None
+        
+        new_password = input("Yangi parol: ")
+        # Adminlik uchun maxfiy kod tekshiruvi
+        is_admin = input("Adminlik kodi (ixtiyoriy): ") == "777"
+        
+        users[new_login] = {
+            "password": new_password, 
+            "role": "admin" if is_admin else "viewer"
         }
-    </script>
-</body>
-</html>
+        print(f"Muvaffaqiyatli! Rolingiz: {users[new_login]['role']}")
+        return {"login": new_login, "role": users[new_login]['role']}
+
+    # --- KIRISH ---
+    elif choice == "1":
+        login = input("Login: ")
+        password = input("Parol: ")
+
+        # Login borligini va paroli to'g'riligini tekshirish
+        if login in users and users[login]["password"] == password:
+            print(f"Xush kelibsiz! Rolingiz: {users[login]['role']}")
+            return {"login": login, "role": users[login]["role"]}
+        else:
+            print("Login yoki parol xato!")
+            return None
