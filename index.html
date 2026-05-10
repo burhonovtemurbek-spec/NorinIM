@@ -3,67 +3,145 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>norinIM | Burhonov Temurbek</title>
+    <title>norinIM | Maktab Raqamli Portali</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@900&family=Inter:wght@400;700;900&display=swap');
-        body { font-family: 'Inter', sans-serif; }
-        .brand { font-family: 'Playfair Display', serif; }
-        .owner-glow { box-shadow: 0 0 15px rgba(37, 99, 235, 0.2); border: 1px solid #e2e8f0; }
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@400;600;800&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
+        .old-money { font-family: 'Playfair Display', serif; }
+        .glass { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(15px); }
+        .page { display: none; }
+        .page.active { display: block; animation: fadeIn 0.4s ease; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
-<body class="bg-[#F8FAFC]">
+<body>
 
-    <div id="login-view" class="fixed inset-0 z-[100] bg-[#0A1128] flex items-center justify-center p-6">
-        <div class="bg-white p-12 rounded-[3rem] shadow-2xl w-full max-w-sm text-center">
-            <h2 class="brand text-4xl mb-2 italic text-[#0A1128]">norin<span class="text-blue-600 font-light text-3xl">IM</span></h2>
-            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-8">System Owner: Temurbek</p>
-            <div class="space-y-3">
-                <input id="u" type="text" placeholder="Owner Login" class="w-full p-4 bg-slate-50 rounded-2xl outline-none focus:ring-2 focus:ring-blue-600 border-none transition-all">
-                <input id="p" type="password" placeholder="Password" class="w-full p-4 bg-slate-50 rounded-2xl outline-none focus:ring-2 focus:ring-blue-600 border-none transition-all">
-                <button onclick="login()" class="w-full py-4 bg-[#0A1128] text-white rounded-2xl font-black hover:bg-blue-800 transition shadow-lg">UNLOCK SYSTEM</button>
+    <div id="login-screen" class="fixed inset-0 z-[100] bg-[#0A1128] flex items-center justify-center p-6">
+        <div class="bg-white p-10 rounded-[2.5rem] shadow-2xl w-full max-w-md text-center border-t-8 border-blue-600">
+            <h2 class="old-money text-4xl mb-2 italic">norin<span class="text-blue-600">IM</span></h2>
+            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-[0.3em] mb-8 font-black">Authorized by Temurbek</p>
+            <div class="space-y-4">
+                <input id="u" type="text" placeholder="Login" class="w-full p-4 bg-slate-100 rounded-2xl outline-none focus:ring-2 focus:ring-blue-600">
+                <input id="p" type="password" placeholder="Parol" class="w-full p-4 bg-slate-100 rounded-2xl outline-none focus:ring-2 focus:ring-blue-600">
+                <button onclick="handleLogin()" class="w-full py-4 bg-blue-600 text-white rounded-2xl font-black hover:bg-blue-700 transition shadow-lg">KIRISH</button>
             </div>
         </div>
     </div>
 
-    <div id="main-ui" class="hidden">
-        <nav class="p-6 bg-white border-b flex justify-between items-center sticky top-0 z-50">
-            <div class="brand text-2xl italic font-black">norin<span class="text-blue-600">IM</span></div>
-            <div class="px-4 py-1 bg-yellow-50 text-yellow-700 rounded-full text-[9px] font-black uppercase tracking-widest border border-yellow-200">
-                Super-Admin: Burhonov Temurbek
+    <div id="app" class="hidden">
+        <nav class="fixed top-0 w-full glass z-50 border-b px-6 py-4 flex justify-between items-center">
+            <div class="old-money text-2xl font-black italic cursor-pointer" onclick="showPage('home')">norin<span class="text-blue-600">IM</span></div>
+            <div class="hidden md:flex gap-10 text-[11px] font-black uppercase tracking-widest text-slate-500">
+                <button onclick="showPage('home')" class="hover:text-blue-600 transition">Asosiy</button>
+                <button onclick="showPage('students')" class="hover:text-blue-600 transition">O'quvchilar Bazasi</button>
+                <button onclick="showPage('admin')" class="hover:text-red-600 border-l pl-6 transition">Admin Panel</button>
             </div>
+            <button onclick="location.reload()" class="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">Chiqish</button>
         </nav>
 
-        <main class="p-8 max-w-5xl mx-auto text-center">
-            <h1 class="brand text-7xl md:text-[100px] leading-none mb-6 text-[#0A1128]">DIGITAL<br><span class="text-blue-600 italic">PORTAL</span></h1>
-            <p class="text-slate-400 font-bold uppercase tracking-[0.4em] text-[10px] mb-20 italic">"Sifatli ta'lim — buyuk kelajak garovi"</p>
-            
-            <div class="grid md:grid-cols-2 gap-8 text-left">
-                <div class="p-12 bg-[#0A1128] rounded-[4rem] text-white shadow-2xl relative overflow-hidden group">
-                    <div class="absolute -right-10 -top-10 w-40 h-40 bg-blue-600/20 rounded-full group-hover:scale-150 transition-all"></div>
-                    <p class="text-[10px] font-bold uppercase opacity-50 mb-2">Total Students</p>
-                    <h3 class="text-6xl font-black italic">450+</h3>
+        <main id="home" class="page active pt-32 px-6 max-w-6xl mx-auto">
+            <div class="text-center mb-16">
+                <span class="bg-blue-50 text-blue-700 px-5 py-2 rounded-full text-[10px] font-black uppercase mb-6 inline-block tracking-widest border border-blue-100">Portal Owner: Temurbek Burhonov</span>
+                <h1 class="old-money text-6xl md:text-8xl text-[#0A1128] mb-6 tracking-tighter leading-tight">RAQAMLI <br><span class="italic text-blue-600 font-light underline decoration-1">PORTAL</span></h1>
+                <p class="text-slate-400 font-medium text-lg max-w-2xl mx-auto italic">Maktab o'quvchilari va xodimlari ma'lumotlarini boshqarish tizimi</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8 mb-20">
+                <div class="p-12 bg-[#0A1128] text-white rounded-[3rem] shadow-2xl">
+                    <p class="text-xs font-bold uppercase opacity-50 mb-2 tracking-[0.2em]">O'quvchilar soni</p>
+                    <h3 class="text-7xl font-black italic mb-4">452</h3>
+                    <div class="w-20 h-1 bg-blue-600"></div>
                 </div>
-                <div class="p-12 bg-white rounded-[4rem] border-2 border-dashed border-slate-200 flex flex-col justify-center items-center">
-                    <p class="text-slate-300 font-black text-xl italic uppercase">Tizim Ishga Tayyor</p>
+                <div class="p-12 bg-white border border-slate-100 rounded-[3rem] shadow-xl">
+                    <p class="text-xs font-bold uppercase text-blue-600 mb-2 tracking-[0.2em]">O'qituvchilar tarkibi</p>
+                    <h3 class="text-7xl font-black italic mb-4 text-[#0A1128]">48</h3>
+                    <div class="w-20 h-1 bg-slate-200"></div>
                 </div>
             </div>
         </main>
 
-        <footer class="mt-40 py-10 border-t border-slate-100 text-center">
-            <p class="text-[9px] font-black text-slate-300 uppercase tracking-[0.4em]">
-                norinIM &copy; 2026 | PROJECT OWNER: BURHONOV TEMURBEK
+        <section id="students" class="page pt-32 px-6 max-w-6xl mx-auto pb-20">
+            <div class="flex justify-between items-end mb-8">
+                <div>
+                    <h2 class="old-money text-4xl text-[#0A1128]">O'quvchilar <span class="text-blue-600 italic">Bazasi</span></h2>
+                    <p class="text-slate-400 text-sm mt-2 font-medium">Jami ro'yxatdan o'tganlar: 452 ta</p>
+                </div>
+                <button class="bg-blue-600 text-white px-6 py-3 rounded-xl font-bold text-xs uppercase tracking-widest hover:bg-blue-700 transition">Qidirish</button>
+            </div>
+
+            <div class="bg-white rounded-[2.5rem] shadow-sm overflow-hidden border border-slate-100">
+                <table class="w-full text-left">
+                    <thead class="bg-slate-50 border-b">
+                        <tr>
+                            <th class="p-8 text-[10px] font-black uppercase tracking-widest text-slate-400">F.I.SH</th>
+                            <th class="p-8 text-[10px] font-black uppercase tracking-widest text-slate-400 text-center">Sinf</th>
+                            <th class="p-8 text-[10px] font-black uppercase tracking-widest text-slate-400 text-right">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-sm">
+                        <tr class="border-b hover:bg-slate-50 transition">
+                            <td class="p-8 font-bold text-[#0A1128]">Burhonov Temurbek</td>
+                            <td class="p-8 text-center font-bold text-slate-500">7-Sinf</td>
+                            <td class="p-8 text-right"><span class="bg-blue-50 text-blue-600 px-4 py-1 rounded-full text-[10px] font-black italic">TIZIM EGASI</span></td>
+                        </tr>
+                        <tr class="border-b hover:bg-slate-50 transition">
+                            <td class="p-8 font-bold text-[#0A1128]">Aliyev Vali</td>
+                            <td class="p-8 text-center font-bold text-slate-500">9-Sinf</td>
+                            <td class="p-8 text-right"><span class="bg-slate-100 text-slate-500 px-4 py-1 rounded-full text-[10px] font-black">FAOLLASHTIRILGAN</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="admin" class="page pt-32 px-6 max-w-4xl mx-auto">
+            <div class="bg-white p-12 rounded-[3.5rem] border-2 border-[#0A1128] shadow-2xl relative overflow-hidden">
+                <div class="relative z-10">
+                    <h2 class="old-money text-3xl mb-8 italic text-[#0A1128]">Boshqaruv Markazi</h2>
+                    <div class="grid gap-6">
+                        <div class="p-8 bg-blue-50 rounded-3xl border border-blue-100">
+                            <p class="text-[10px] font-bold text-blue-600 uppercase mb-2 tracking-widest">Tizim Ma'muri</p>
+                            <p class="text-2xl font-black text-[#0A1128]">TEMURBEK BURHONOV</p>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="p-6 bg-slate-50 rounded-3xl border text-center">
+                                <p class="text-[10px] font-bold text-slate-400 uppercase mb-2 italic">Xavfsizlik</p>
+                                <p class="font-black text-green-600 uppercase">Yuqori</p>
+                            </div>
+                            <div class="p-6 bg-slate-50 rounded-3xl border text-center">
+                                <p class="text-[10px] font-bold text-slate-400 uppercase mb-2 italic">Versiya</p>
+                                <p class="font-black text-blue-600 uppercase">v2.0 Beta</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer class="mt-32 py-10 border-t text-center">
+            <p class="text-[9px] font-black text-slate-300 uppercase tracking-[0.5em]">
+                norinIM DIGITAL PORTAL &copy; 2026 | CREATED BY BURHONOV TEMURBEK
             </p>
         </footer>
     </div>
 
     <script>
         const AUTH = { u: "owner_admin", p: "Maktab_2026_Global" };
-        function login() {
-            if(document.getElementById('u').value === AUTH.u && document.getElementById('p-inp' || 'p').value === AUTH.p) {
-                document.getElementById('login-view').style.display = 'none';
-                document.getElementById('main-ui').classList.remove('hidden');
-            } else { alert("Xato!"); }
+
+        function handleLogin() {
+            const user = document.getElementById('u').value;
+            const pass = document.getElementById('p').value;
+            if(user === AUTH.u && pass === AUTH.p) {
+                document.getElementById('login-screen').style.display = 'none';
+                document.getElementById('app').classList.remove('hidden');
+            } else { alert("Ma'lumotlar xato!"); }
+        }
+
+        function showPage(id) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            window.scrollTo(0,0);
         }
     </script>
 </body>
